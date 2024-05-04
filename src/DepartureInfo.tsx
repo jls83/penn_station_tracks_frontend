@@ -8,7 +8,7 @@ dayjs.extend(duration);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import './Blah.css'
+import './DepartureInfo.css'
 
 interface Foo {
   track: number,

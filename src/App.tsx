@@ -1,35 +1,46 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
+import { PostgrestSingleResponse } from '@supabase/supabase-js';
 
 import { Tables } from './database.types';
 
-import { TrackHistory } from './DepartureInfo';
+// import { TrackHistory } from './DepartureInfo';
+import { PredictionData } from './PredictionView';
 
-import './Blah.css'
-import { PostgrestSingleResponse } from '@supabase/supabase-js';
 
 function App() {
   // const d: Tables<'routes'>[] = []
   // const [routes, setRoutes] = useState([]);
 
-  const e: Tables<'lastndepartures'>[] = []
-  const [deps, setDeps] = useState(e);
+  // const e: Tables<'lastndepartures'>[] = []
+  // const [deps, setDeps] = useState(e);
+  //
+  const f: Tables<'thingview'>[] = [];
+  const [predictionData, setPredictionData] = useState(f);
 
   useEffect(() => {
-    getDeps();
+    getPredictionData();
   }, []);
 
-  async function getDeps() {
-    const { data }: PostgrestSingleResponse<Tables<'lastndepartures'>[]> = await supabase
-      .from('lastndepartures')
+  // async function getDeps() {
+  //   const { data }: PostgrestSingleResponse<Tables<'lastndepartures'>[]> = await supabase
+  //     .from('lastndepartures')
+  //     .select("*");
+
+  //   setDeps(data ?? []);
+  // }
+
+  async function getPredictionData() {
+    const { data }: PostgrestSingleResponse<Tables<'thingview'>[]> = await supabase
+      .from('thingview')
       .select("*");
 
-    setDeps(data ?? []);
+    setPredictionData(data ?? []);
   }
 
   return (
     <div className="container">
-      {deps.map(TrackHistory)}
+      {predictionData.map((pd) => (<PredictionData {...pd} />))}
     </div>
   )
 }

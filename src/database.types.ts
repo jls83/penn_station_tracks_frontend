@@ -301,6 +301,19 @@ export type Database = {
         }
         Relationships: []
       }
+      thingview: {
+        Row: {
+          actual_track: string | null
+          departure_timestamp: string | null
+          predicted_lead_time: number | null
+          predicted_track: string | null
+          route_color: string | null
+          route_text_color: string | null
+          train_num: number | null
+          trip_headsign: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
