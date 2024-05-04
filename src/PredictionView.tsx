@@ -1,4 +1,4 @@
-import { Json, Tables } from './database.types'
+import { Tables } from './database.types'
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import timezone from 'dayjs/plugin/timezone';
@@ -9,24 +9,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 import './PredictionView.css'
-
-// TODO: move to a common.ts file
-interface Foo {
-  track: number,
-  announcement_timestamp: string,
-  departure_timestamp: string,
-}
-
-interface Bar {
-  trip_headsign: string,
-  train_num: number,
-  departure_timestamp: string,
-  predicted_track: number,
-  actual_track: number,
-  predicted_lead_time: number,
-  route_color: string,
-  route_text_color: string,
-}
 
 function RouteBanner(route: Tables<'routes'>) {
   return (
@@ -45,18 +27,34 @@ function RouteBanner(route: Tables<'routes'>) {
 export function PredictionData({
   trip_headsign,
   train_num,
-  departure_timestamp,
+  date,
+  departure_time,
   predicted_track,
   actual_track,
   predicted_lead_time,
   route_color,
   route_text_color,
-}: Tables<'thingview'>) {
+}: Tables<'basicview'>) {
+  const departure_timestamp = `${date} ${departure_time}`;
   const departure_d = dayjs.utc(departure_timestamp).tz("America/New_York");
   const departureTimeFormatted = departure_d.format('HH:mm');
 
-  const predictedLeadTime = predicted_lead_time !== null ? dayjs.duration(predicted_lead_time, 'seconds') : null;
-  const predictedLeadTimeFormatted = predictedLeadTime?.format("mm:ss");
+  let predictedLeadTime = predicted_lead_time !== null
+    ? dayjs.duration(predicted_lead_time, 'seconds')
+    : null;
+
+  let predictedLeadTimeFormatted;
+
+  if (predictedLeadTime === null) {
+    predictedLeadTimeFormatted = "??";
+  } else if (predictedLeadTime.asMilliseconds() < 0) {
+    // const s = predictedLeadTime.asSeconds() * -1;
+    const s = predictedLeadTime.asMilliseconds() * -1;
+    const blah = dayjs.duration(s).format("mm:ss");
+    predictedLeadTimeFormatted = `-${blah}`;
+  } else {
+    predictedLeadTimeFormatted = predictedLeadTime?.format("mm:ss");
+  }
 
   const trainTimeUrl = `https://traintime.mta.info/map?trainId=LIRR_${train_num}`;
 
@@ -85,7 +83,8 @@ export function PredictionData({
           target="_blank"
           className="traintime-url"
           style={{
-            color: `#${route_text_color} }}
+            color: `#${route_text_color}`
+          }}
         >
           Train #{train_num}
         </a>

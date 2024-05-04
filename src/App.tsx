@@ -16,11 +16,15 @@ function App() {
   // const e: Tables<'lastndepartures'>[] = []
   // const [deps, setDeps] = useState(e);
   //
-  const f: Tables<'thingview'>[] = [];
+  const f: Tables<'basicview'>[] = [];
   const [predictionData, setPredictionData] = useState(f);
+
+  const g: Tables<'scheduleview'>[] = []
+  const [schedules, setSchedules] = useState(g);
 
   useEffect(() => {
     getPredictionData();
+    getSchedules();
   }, []);
 
   // async function getDeps() {
@@ -34,13 +38,24 @@ function App() {
   async function getPredictionData() {
     // TODO: this filtering will work better when i have the actual schedules in
     // place.
-    const timeLimit = dayjs().subtract(3, 'day').format();
-    const { data }: PostgrestSingleResponse<Tables<'thingview'>[]> = await supabase
-      .from('thingview')
-      .select("*");
-    // .gt('departure_timestamp', timeLimit);
+    const windowStart = dayjs().subtract(1, 'hour').format('YYYY-MM-DD');
+    const windowEnd = dayjs().add(1, 'day').format('YYYY-MM-DD');
+    const { data }: PostgrestSingleResponse<Tables<'basicview'>[]> = await supabase
+      .from('basicview')
+      .select("*")
+      .lte('date', windowEnd)
+      .gte('date', windowStart);
 
     setPredictionData(data ?? []);
+  }
+
+  async function getSchedules() {
+    const { data }: PostgrestSingleResponse<Tables<'scheduleview'>[]> = await supabase
+      .from('scheduleview')
+      .select("*")
+      .eq('date', dayjs().format('YYYY-MM-DD'));
+
+    setSchedules(data ?? []);
   }
 
   return (

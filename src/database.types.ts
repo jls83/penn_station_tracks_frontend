@@ -294,12 +294,66 @@ export type Database = {
       }
     }
     Views: {
+      basicview: {
+        Row: {
+          actual_track: string | null
+          date: string | null
+          departure_time: string | null
+          direction_id: number | null
+          peak_offpeak: number | null
+          predicted_lead_time: number | null
+          predicted_track: string | null
+          route_color: string | null
+          route_id: number | null
+          route_long_name: string | null
+          route_text_color: string | null
+          service_id: string | null
+          stop_sequence: number | null
+          train_num: number | null
+          trip_headsign: string | null
+          tv: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_routes"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["route_id"]
+          },
+        ]
+      }
       lastndepartures: {
         Row: {
           array_agg: Json[] | null
           train_num: number | null
         }
         Relationships: []
+      }
+      scheduleview: {
+        Row: {
+          date: string | null
+          departure_time: string | null
+          direction_id: number | null
+          peak_offpeak: number | null
+          route_color: string | null
+          route_id: number | null
+          route_long_name: string | null
+          route_text_color: string | null
+          service_id: string | null
+          stop_sequence: number | null
+          train_num: number | null
+          trip_headsign: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_routes"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["route_id"]
+          },
+        ]
       }
       thingview: {
         Row: {
@@ -408,4 +462,3 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
   ? PublicSchema["Enums"][PublicEnumNameOrOptions]
   : never
-

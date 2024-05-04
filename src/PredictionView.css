@@ -63,6 +63,7 @@ body {
 .traintime-url {
     text-decoration: underline;
     text-decoration-style: dotted;
+    text-underline-offset: 0.15em;
 }
 
 .traintime-url:hover {
