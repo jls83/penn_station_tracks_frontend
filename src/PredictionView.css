@@ -32,19 +32,17 @@ body {
 .top-row {
     font-size: 2em;
     margin-bottom: 0.1em;
-    font-weight: 400;
+    font-weight: 500;
     /* border: 1px solid black; */
 }
 
 .bottom-row {
-    font-size: 1.2em;
+    font-size: 1.4em;
     align-content: center;
     /* border: 1px solid black; */
 }
 
-.headsign {
-    text-align: left;
-}
+.headsign {}
 
 .track {}
 
@@ -61,3 +59,14 @@ body {
     font-style: italic;
     text-align: right;
 }
+
+.traintime-url {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+.traintime-url:hover {
+    text-decoration: underline;
+    text-decoration-style: solid;
+}
+

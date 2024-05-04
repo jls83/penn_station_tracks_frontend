@@ -55,7 +55,10 @@ export function PredictionData({
   const departure_d = dayjs.utc(departure_timestamp).tz("America/New_York");
   const departureTimeFormatted = departure_d.format('HH:mm');
 
-  const predictedLeadTimeFormatted = predicted_lead_time !== null ? Math.round(predicted_lead_time) : "??";
+  const predictedLeadTime = predicted_lead_time !== null ? dayjs.duration(predicted_lead_time, 'seconds') : null;
+  const predictedLeadTimeFormatted = predictedLeadTime?.format("mm:ss");
+
+  const trainTimeUrl = `https://traintime.mta.info/map?trainId=LIRR_${train_num}`;
 
   return (
     <div className="parent"
@@ -74,11 +77,18 @@ export function PredictionData({
         {actual_track}
       </div>
       <div className="div5 bottom-row lead-time">
-        <div className="section-header">Lead Time</div>
+        <div className="section-header">Avg. Lead Time</div>
         {predictedLeadTimeFormatted}
       </div>
       <div className="div6 footer-row train-num">
-        Train #{train_num}
+        <a href={trainTimeUrl}
+          target="_blank"
+          className="traintime-url"
+          style={{
+            color: `#${route_text_color} }}
+        >
+          Train #{train_num}
+        </a>
       </div>
     </div>
   );

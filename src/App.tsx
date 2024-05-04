@@ -6,6 +6,7 @@ import { Tables } from './database.types';
 
 // import { TrackHistory } from './DepartureInfo';
 import { PredictionData } from './PredictionView';
+import dayjs from 'dayjs';
 
 
 function App() {
@@ -31,9 +32,13 @@ function App() {
   // }
 
   async function getPredictionData() {
+    // TODO: this filtering will work better when i have the actual schedules in
+    // place.
+    const timeLimit = dayjs().subtract(3, 'day').format();
     const { data }: PostgrestSingleResponse<Tables<'thingview'>[]> = await supabase
       .from('thingview')
       .select("*");
+    // .gt('departure_timestamp', timeLimit);
 
     setPredictionData(data ?? []);
   }
