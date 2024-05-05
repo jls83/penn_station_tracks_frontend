@@ -38,7 +38,7 @@ function App() {
   async function getPredictionData() {
     // TODO: this filtering will work better when i have the actual schedules in
     // place.
-    const windowStart = dayjs().subtract(1, 'hour').format('YYYY-MM-DD');
+    const windowStart = dayjs().subtract(2, 'day').format('YYYY-MM-DD');
     const windowEnd = dayjs().add(1, 'day').format('YYYY-MM-DD');
     const { data }: PostgrestSingleResponse<Tables<'basicview'>[]> = await supabase
       .from('basicview')
