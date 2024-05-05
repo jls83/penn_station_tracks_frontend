@@ -2,8 +2,14 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr auto;
-    /* grid-column-gap: 2px; */
-    /* grid-row-gap: 2px; */
+
+    font-family: "Helvetica Neue";
+    font-weight: 400;
+
+    max-width: 28rem;
+    max-height: auto;
+    padding: 0.2rem 0.5rem 0.4rem 0.5rem;
+    margin-top: 0.4rem;
 }
 
 .div1 { grid-area: 1 / 1 / 2 / 3; }
@@ -13,77 +19,64 @@
 .div5 { grid-area: 2 / 3 / 3 / 4; }
 .div6 { grid-area: 3 / 1 / 4 / 4; }
 
-body {
-    font-family: "Helvetica Neue";
-    font-weight: 400;
-}
-
-.parent {
-    max-width: 450px;
-    max-height: auto;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    padding-top: 0.2em;
-    padding-bottom: 0.4em;
-    margin-top: 0.4em;
-    margin-bottom: 0.4em;
-}
-
 .top-row {
-    font-size: 2em;
+    font-size: 1.6rem;
+    font-weight: 500;
+
     padding-bottom: 0.1em;
     margin-bottom: 0.2em;
-    font-weight: 500;
-    /* border: 1px solid black; */
-    border-bottom: 4px double;
+
+    border-bottom: 0.125em double;
+
+    @media (min-width: 391px) {
+        font-size: 2rem;
+    }
 }
 
 .bottom-row {
-    font-size: 1.4em;
-    align-content: center;
+    font-size: 1.4rem;
     font-weight: 500;
-    /* border: 1px solid black; */
+
+    align-content: center;
 }
 
-.headsign {}
-
-.track {}
-
-.lead-time {}
-
 .departure-time {
-    width: 80px;
     display: inline-block;
+    width: 2.5em;
+
     margin-right: 0.2em;
 }
 
 .departure-date {
-    font-weight: 400;
-    font-size: 0.6em;
-    margin-right: 0.2em;
-    vertical-align: 20%;
-    width: 37px;
     display: inline-block;
+    /* width: 37px; */
+    width: 2.25em;
+
+    font-weight: 400;
+    font-size: 0.5em;
+
+    vertical-align: 25%;
 }
 
 .peak-indicator {
-    font-weight: 600;
-    font-size: 0.6em;
+    display: inline-block;
     width: 1em;
+
+    font-weight: 600;
+    font-size: 0.625em;
+
+    margin-left: 0.2em;
     vertical-align: 20%;
     text-align: center;
-    display: inline-block;
 }
 
 .section-header {
-    font-size: 0.6em;
+    font-size: 0.84rem;
     font-weight: 400;
 }
 
-.footer-row {}
-
 .train-num {
-    font-size: 0.6em;
+    font-size: 0.6rem;
     font-style: italic;
     text-align: right;
 }
@@ -91,7 +84,7 @@ body {
 .traintime-url {
     text-decoration: underline;
     text-decoration-style: dotted;
-    text-underline-offset: 0.15em;
+    text-underline-offset: 0.2em;
 }
 
 .traintime-url:hover {
