@@ -39,13 +39,14 @@ function App() {
   async function getPredictionData() {
     // TODO: This should rely on some filter state I think. Will need to adjust
     // the backend logic to make sure the announced tracks are available also.
-    const windowStart = dayjs().subtract(2, 'day').format('YYYY-MM-DD');
-    const windowEnd = dayjs().add(1, 'day').format('YYYY-MM-DD');
+    const windowStart = dayjs().subtract(2, 'day');
+    const windowStartFormatted = windowStart.format('YYYY-MM-DD');
+    const windowEndFormatted = dayjs().add(1, 'day').format('YYYY-MM-DD');
     const { data }: PostgrestSingleResponse<Tables<'basicview'>[]> = await supabase
       .from('basicview')
       .select("*")
-      .lte('date', windowEnd)
-      .gte('date', windowStart);
+      .lte('departure_timestamp_scheduled', windowEndFormatted)
+      .gte('departure_timestamp_scheduled', windowStartFormatted);
 
     setPredictionData(data ?? []);
   }
