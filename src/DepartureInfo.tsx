@@ -1,21 +1,22 @@
-import { Json, Tables } from './database.types'
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
+import { Json, Tables } from './database.types'
+import './DepartureInfo.css'
+
 dayjs.extend(duration);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-import './DepartureInfo.css'
-
-interface Foo {
+interface DepartureItem {
   track: number,
   announcement_timestamp: string,
   departure_timestamp: string,
 }
 
+// TODO: Move to "other" file
 function RouteBanner(route: Tables<'routes'>) {
   return (
     <div style={{
@@ -30,7 +31,7 @@ function RouteBanner(route: Tables<'routes'>) {
   )
 }
 
-function getDepartureTimeData({ announcement_timestamp, departure_timestamp }: Foo) {
+function getDepartureTimeData({ announcement_timestamp, departure_timestamp }: DepartureItem) {
   const announcement_d = dayjs.utc(announcement_timestamp).tz("America/New_York");
   const departure_d = dayjs.utc(departure_timestamp).tz("America/New_York");
 
@@ -38,7 +39,6 @@ function getDepartureTimeData({ announcement_timestamp, departure_timestamp }: F
   const departureTimeFormatted = departure_d.format('HH:mm:ss');
   const announcementTimeFormatted = announcement_d.format('HH:mm:ss');
 
-  // TODO: leadTime isnt the right word
   const leadTime = dayjs.duration(departure_d.diff(announcement_d));
 
   const leadTimeMillis = leadTime.asMilliseconds();
@@ -58,7 +58,7 @@ function getDepartureTimeData({ announcement_timestamp, departure_timestamp }: F
   };
 }
 
-function DepartureInfo(d: Foo) {
+function DepartureInfo(d: DepartureItem) {
   const departureTimeData = getDepartureTimeData(d);
   return (
     <div className="parent">
@@ -76,14 +76,14 @@ function DepartureInfo(d: Foo) {
 }
 
 export function TrackHistory(dep: Tables<'lastndepartures'>) {
-  const blah = dep?.array_agg ?? [];
+  const departureItems = dep?.array_agg ?? [];
 
   return (
     <tr>
       <th>{dep.train_num}</th>
-      {blah.map((d: Json) => (
+      {departureItems.map((departureItem: Json) => (
         <td>
-          <DepartureInfo {...((d as object) as Foo)} />
+          <DepartureInfo {...((departureItem as object) as DepartureItem)} />
         </td>
       ))}
     </tr>
