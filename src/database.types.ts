@@ -323,6 +323,19 @@ export type Database = {
           },
         ]
       }
+      departureview: {
+        Row: {
+          announcement_timestamp: string | null
+          departure_timestamp: string | null
+          run_date: string | null
+          sched_hit: boolean | null
+          sched_track: number | null
+          track: number | null
+          train_id: string | null
+          train_num: number | null
+        }
+        Relationships: []
+      }
       lastndepartures: {
         Row: {
           array_agg: Json[] | null
