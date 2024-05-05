@@ -34,10 +34,12 @@ export function PredictionData({
   predicted_lead_time,
   route_color,
   route_text_color,
+  peak_offpeak,
 }: Tables<'basicview'>) {
   const departure_timestamp = `${date} ${departure_time}`;
-  const departure_d = dayjs.utc(departure_timestamp).tz("America/New_York");
+  const departure_d = dayjs(departure_timestamp)
   const departureTimeFormatted = departure_d.format('HH:mm');
+  const departureDateFormatted = departure_d.format('ddd');
 
   let predictedLeadTime = predicted_lead_time !== null
     ? dayjs.duration(predicted_lead_time, 'seconds')
@@ -65,14 +67,27 @@ export function PredictionData({
         backgroundColor: `#${route_color}`,
       }}>
       <div className="div1 top-row headsign">{trip_headsign}</div>
-      <div className="div2 top-row departure-time">{departureTimeFormatted}</div>
+      <div className="div2 top-row">
+        <span className="departure-time">
+          {departureTimeFormatted}
+        </span>
+        <span className="departure-date">{departureDateFormatted}</span>
+        <span
+          className="peak-indicator"
+          style={{
+            color: `#${route_color}`,
+            backgroundColor: `#${route_text_color}`,
+          }}>
+          {peak_offpeak ? "P" : "O"}
+        </span>
+      </div>
       <div className="div3 bottom-row track">
         <div className="section-header">Predicted</div>
         {predicted_track}
       </div>
       <div className="div4 bottom-row track">
         <div className="section-header">Actual</div>
-        {actual_track}
+        {actual_track ?? "--"}
       </div>
       <div className="div5 bottom-row lead-time">
         <div className="section-header">Avg. Lead Time</div>
