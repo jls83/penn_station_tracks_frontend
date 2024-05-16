@@ -66,21 +66,39 @@ export type Database = {
         }
         Relationships: []
       }
-      departures_raw: {
+      departures_v2: {
         Row: {
-          departure_data: Json | null
+          announcement_timestamp: string | null
+          departure_timestamp: string | null
           id: number
-          timestamp: string | null
+          run_date: string | null
+          sched_hit: boolean | null
+          sched_track: number | null
+          track: number | null
+          train_id: string | null
+          train_num: number | null
         }
         Insert: {
-          departure_data?: Json | null
+          announcement_timestamp?: string | null
+          departure_timestamp?: string | null
           id?: number
-          timestamp?: string | null
+          run_date?: string | null
+          sched_hit?: boolean | null
+          sched_track?: number | null
+          track?: number | null
+          train_id?: string | null
+          train_num?: number | null
         }
         Update: {
-          departure_data?: Json | null
+          announcement_timestamp?: string | null
+          departure_timestamp?: string | null
           id?: number
-          timestamp?: string | null
+          run_date?: string | null
+          sched_hit?: boolean | null
+          sched_track?: number | null
+          track?: number | null
+          train_id?: string | null
+          train_num?: number | null
         }
         Relationships: []
       }
@@ -312,7 +330,6 @@ export type Database = {
           stop_sequence: number | null
           train_num: number | null
           trip_headsign: string | null
-          tv: string | null
         }
         Relationships: [
           {
@@ -323,19 +340,6 @@ export type Database = {
             referencedColumns: ["route_id"]
           },
         ]
-      }
-      departureview: {
-        Row: {
-          announcement_timestamp: string | null
-          departure_timestamp: string | null
-          run_date: string | null
-          sched_hit: boolean | null
-          sched_track: number | null
-          track: number | null
-          train_id: string | null
-          train_num: number | null
-        }
-        Relationships: []
       }
       lastndepartures: {
         Row: {

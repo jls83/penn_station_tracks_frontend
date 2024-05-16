@@ -7,34 +7,31 @@ import { Tables } from './database.types';
 
 // import { TrackHistory } from './DepartureInfo';
 import { PredictionData } from './PredictionView';
+import { TrackHistory } from './DepartureInfo';
+import { TrainHistoryView } from './TrainHistoryView';
 
 
 function App() {
-  // const d: Tables<'routes'>[] = []
-  // const [routes, setRoutes] = useState([]);
-
-  // const e: Tables<'lastndepartures'>[] = []
-  // const [deps, setDeps] = useState(e);
-  //
-  const f: Tables<'basicview'>[] = [];
-  const [predictionData, setPredictionData] = useState(f);
-
-  // const g: Tables<'scheduleview'>[] = []
-  // const [schedules, setSchedules] = useState(g);
+  const [routes, setRoutes] = useState<Tables<'routes'>[]>([]);
+  const [deps, setDeps] = useState<Tables<'lastndepartures'>[]>([]);
+  const [predictionData, setPredictionData] = useState<Tables<'basicview'>[]>([]);
+  const [schedules, setSchedules] = useState<Tables<'scheduleview'>[]>([]);
+  const [trainHistoryData, setTrainHistoryData] = useState<Tables<'basicview'>[]>([]);
 
   useEffect(() => {
-    getPredictionData();
+    getTrainHistoryData();
+    // getPredictionData();
     // getSchedules();
     // getDeps();
   }, []);
 
-  // async function getDeps() {
-  //   const { data }: PostgrestSingleResponse<Tables<'lastndepartures'>[]> = await supabase
-  //     .from('lastndepartures')
-  //     .select("*");
+  async function getDeps() {
+    const { data }: PostgrestSingleResponse<Tables<'lastndepartures'>[]> = await supabase
+      .from('lastndepartures')
+      .select("*");
 
-  //   setDeps(data ?? []);
-  // }
+    setDeps(data ?? []);
+  }
 
   async function getPredictionData() {
     // TODO: This should rely on some filter state I think. Will need to adjust
@@ -50,18 +47,36 @@ function App() {
     setPredictionData(data ?? []);
   }
 
-  // async function getSchedules() {
-  //   const { data }: PostgrestSingleResponse<Tables<'scheduleview'>[]> = await supabase
-  //     .from('scheduleview')
-  //     .select("*")
-  //     .eq('date', dayjs().format('YYYY-MM-DD'));
+  async function getTrainHistoryData() {
+    // TODO: This should rely on some filter state I think. Will need to adjust
+    // the backend logic to make sure the announced tracks are available also.
+    const windowStart = dayjs();
+    const windowStartFormatted = windowStart.format('YYYY-MM-DD HH:mm');
+    const trainNum = 1166;
+    const { data }: PostgrestSingleResponse<Tables<'basicview'>[]> = await supabase
+      .from('basicview')
+      .select("*")
+      .eq("train_num", trainNum)
+      .lte('departure_timestamp_scheduled', windowStartFormatted)
+      .order('date', { ascending: false });
 
-  //   setSchedules(data ?? []);
-  // }
+    console.log(data);
+
+    setTrainHistoryData(data ?? []);
+  }
+
+  async function getSchedules() {
+    const { data }: PostgrestSingleResponse<Tables<'scheduleview'>[]> = await supabase
+      .from('scheduleview')
+      .select("*")
+      .eq('date', dayjs().format('YYYY-MM-DD'));
+
+    setSchedules(data ?? []);
+  }
 
   return (
     <div className="container">
-      {predictionData.map((pd) => (<PredictionData {...pd} />))}
+      <TrainHistoryView train_history_data={trainHistoryData} />
     </div>
   )
 }

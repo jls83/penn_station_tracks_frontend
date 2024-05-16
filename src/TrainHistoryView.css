@@ -1,0 +1,104 @@
+.wrapper {
+    max-width: 28rem;
+}
+
+.train-header {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+
+    font-family: "Helvetica Neue";
+    font-weight: 400;
+
+    max-height: auto;
+    padding: 0.2rem 0.5rem 0.4rem 0.5rem;
+    margin-top: 0.4rem;
+}
+
+table {
+    font-family: "Helvetica Neue";
+    font-weight: 400;
+
+    width: 100%;
+    max-height: auto;
+    margin-top: 0.4rem;
+
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.5em;
+    text-align: center;
+}
+
+.date-cell {
+    font-weight: 500;
+}
+
+.missed-prediction {
+    font-weight: 500;
+    color: rgb(200 0 0);
+}
+
+tbody > tr:nth-of-type(even) {
+    background-color: rgb(237 238 242);
+}
+
+.div1 { grid-area: 1 / 1 / 2 / 3; }
+.div2 { grid-area: 1 / 3 / 2 / 4; }
+
+.top-row {
+    font-size: 1.6rem;
+    font-weight: 500;
+
+    padding-bottom: 0.1em;
+    margin-bottom: 0.2em;
+
+    border-bottom: 0.125em double;
+
+    @media (min-width: 391px) {
+        font-size: 2rem;
+    }
+}
+
+.departure-info {
+    text-align: right;
+}
+
+.peak-indicator {
+    display: inline-block;
+    width: 1em;
+
+    font-weight: 600;
+    font-size: 0.625em;
+
+    margin-left: 0.2em;
+    vertical-align: 20%;
+    text-align: center;
+}
+
+.departure-time {
+    display: inline-block;
+    width: 2.5em;
+
+    margin-right: 0.2em;
+}
+
+.departure-date {
+    display: inline-block;
+    width: 2.25em;
+
+    font-weight: 400;
+    font-size: 0.5em;
+
+    vertical-align: 25%;
+}
+
+.section-header {
+    font-size: 0.84rem;
+    font-weight: 400;
+}
