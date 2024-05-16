@@ -1,3 +1,7 @@
+import { useEffect, useState } from 'react'
+import { useParams } from "wouter";
+import { supabase } from './supabaseClient'
+import { PostgrestSingleResponse } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import timezone from 'dayjs/plugin/timezone';
@@ -24,16 +28,42 @@ function DepartureRow(d: Tables<'basicview'>) {
   );
 }
 
-export function TrainHistoryView({ train_history_data }: { train_history_data: Tables<'basicview'>[] }) {
-  if (!train_history_data || !train_history_data[0]) {
-    return;
+export function TrainHistoryView() {
+  async function getTrainHistoryData(trainNum: number) {
+    // TODO: This should rely on some filter state I think. Will need to adjust
+    // the backend logic to make sure the announced tracks are available also.
+    const windowStart = dayjs();
+    const windowStartFormatted = windowStart.format('YYYY-MM-DD HH:mm');
+    // const trainNum = 1166;
+    const { data }: PostgrestSingleResponse<Tables<'basicview'>[]> = await supabase
+      .from('basicview')
+      .select("*")
+      .eq("train_num", trainNum)
+      .lte('departure_timestamp_scheduled', windowStartFormatted)
+      .order('date', { ascending: false });
+
+    setTrainHistoryData(data ?? []);
   }
 
-  const first = train_history_data[0];
+  const params = useParams();
+  if (!params.train_num) return;
+
+  const trainNum = Number(params.train_num);
+
+  const [trainHistoryData, setTrainHistoryData] = useState<Tables<'basicview'>[]>([]);
+
+  useEffect(() => {
+    getTrainHistoryData(trainNum);
+  }, []);
+
+
+  if (trainHistoryData.length < 1) return;
+
+  const first = trainHistoryData[0];
 
   const {
     trip_headsign,
-    train_num,
+    // train_num,
     date,
     departure_time,
     // predicted_track,
@@ -85,7 +115,7 @@ export function TrainHistoryView({ train_history_data }: { train_history_data: T
           </tr>
         </thead>
         <tbody>
-          {train_history_data.map(DepartureRow)}
+          {trainHistoryData.map(DepartureRow)}
         </tbody>
       </table>
     </div>
