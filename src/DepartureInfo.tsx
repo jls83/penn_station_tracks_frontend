@@ -16,21 +16,6 @@ interface DepartureItem {
   departure_timestamp: string,
 }
 
-// TODO: Move to "other" file
-function RouteBanner(route: Tables<'routes'>) {
-  return (
-    <div style={{
-      color: `#${route.route_text_color}`,
-      backgroundColor: `#${route.route_color}`,
-      fontFamily: 'Helvetica Neue',
-      fontSize: '2em',
-      padding: '0.2em 0.4em',
-      fontWeight: 500,
-      textAlign: 'center',
-    }}>{route.route_long_name}</div>
-  )
-}
-
 function getDepartureTimeData({ announcement_timestamp, departure_timestamp }: DepartureItem) {
   const announcement_d = dayjs.utc(announcement_timestamp).tz("America/New_York");
   const departure_d = dayjs.utc(departure_timestamp).tz("America/New_York");
