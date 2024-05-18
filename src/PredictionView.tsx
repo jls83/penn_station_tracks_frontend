@@ -5,12 +5,16 @@ import utc from 'dayjs/plugin/utc';
 
 import { Tables } from './database.types'
 import './PredictionView.css'
+import { PostgrestSingleResponse } from '@supabase/supabase-js';
+import { supabase } from './supabaseClient';
+import { useEffect, useState } from 'react';
+import { Link } from 'wouter';
 
 dayjs.extend(duration);
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export function PredictionData({
+export function SinglePredictionView({
   trip_headsign,
   train_num,
   date,
@@ -22,6 +26,7 @@ export function PredictionData({
   route_text_color,
   peak_offpeak,
 }: Tables<'basicview'>) {
+
   const departure_timestamp = `${date} ${departure_time}`;
   const departure_d = dayjs(departure_timestamp)
   const departureTimeFormatted = departure_d.format('HH:mm');
@@ -43,7 +48,7 @@ export function PredictionData({
     predictedLeadTimeFormatted = predictedLeadTime?.format("mm:ss");
   }
 
-  const trainTimeUrl = `https://traintime.mta.info/map?trainId=LIRR_${train_num}`;
+  const trainHistoryUrl = `/train_history/${train_num}`;
 
   const routeColorStyle = {
     color: `#${route_text_color}`,
@@ -83,14 +88,43 @@ export function PredictionData({
         {predictedLeadTimeFormatted}
       </div>
       <div className="div6 footer-row train-num">
-        <a href={trainTimeUrl}
+        <Link href={trainHistoryUrl}
           target="_blank"
           className="traintime-url"
           style={routeColorStyle}
         >
           Train #{train_num}
-        </a>
+        </Link>
       </div>
     </div>
   );
+}
+
+export function PredictionView() {
+  async function getPredictionData() {
+    // TODO: This should rely on some filter state I think. Will need to adjust
+    // the backend logic to make sure the announced tracks are available also.
+    const windowStart = dayjs();
+    const windowStartFormatted = windowStart.format('YYYY-MM-DD HH:mm');
+    const { data }: PostgrestSingleResponse<Tables<'basicview'>[]> = await supabase
+      .from('basicview')
+      .select("*")
+      .gte('departure_timestamp_scheduled', windowStartFormatted)
+      .limit(10);
+
+    setPredictionData(data ?? []);
+  }
+
+  const [predictionData, setPredictionData] = useState<Tables<'basicview'>[]>([]);
+
+  useEffect(() => {
+    getPredictionData();
+  });
+
+  return (
+    <div>
+      {predictionData.map(SinglePredictionView)}
+    </div>
+  )
+
 }
